@@ -182,7 +182,7 @@ const Treasury = artifacts.require("Treasury");
 const chalk = require('chalk');
 ```
 
-- declare executer, proposal and the voters, and give each of them a token:
+- declare the executor, proposal, and the voters, and give each of them a `5` token :
 
   ```solidity
    const [executor, proposer, voter1, voter2, voter3, voter4, voter5] = accounts;
@@ -194,6 +194,29 @@ const chalk = require('chalk');
         await token.delegate(voter4, { from: voter4, gas: 500000 });
         await token.delegate(voter5, { from: voter5, gas: 500000 });
   ```
+
+- proposal creation:
+
+  ```solidity
+   const tx = await governance.propose([treasury.address], [0], [encodedFunction], description, { from: proposer, gas: 500000 });
+  ```
+
+- the voting process
+> I deployed 50 tokens for each voter and simulated the voting process with 3 `For` the proposal --> it means agree to the release of the funds!
+```solidity
+        console.log(chalk.blue.bold(`Casting votes...\n`));
+        const votes = [1, 1, 1, 0, 2]; // For, For, For, Against, Abstain
+        await governance.castVote(proposalId, votes[0], { from: voter1, gas: 500000 });
+        await governance.castVote(proposalId, votes[1], { from: voter2, gas: 500000 });
+        await governance.castVote(proposalId, votes[2], { from: voter3, gas: 500000 });
+        await governance.castVote(proposalId, votes[3], { from: voter4, gas: 500000 });
+        await governance.castVote(proposalId, votes[4], { from: voter5, gas: 500000 });
+```
+
+**I create a `console.log` for each operation logs in the screen**
+
+![Screenshot 2024-06-21 1719277](https://github.com/0xmahmoudJo0/DAO/assets/56273659/012f495a-639c-414e-a96b-ac280b057edc)
+
 
 
 
