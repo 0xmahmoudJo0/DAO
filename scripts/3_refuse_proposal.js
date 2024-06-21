@@ -1,5 +1,5 @@
 const Token = artifacts.require("Token");
-const Timelock = artifacts.require("TimelockController"); // Ensure correct import
+const Timelock = artifacts.require("Timelock");
 const Governance = artifacts.require("Governance");
 const Treasury = artifacts.require("Treasury");
 const chalk = require('chalk');
@@ -23,6 +23,9 @@ module.exports = async function (callback) {
         console.log(chalk.green.bold(`Proposer: ${proposer}`));
         console.log(chalk.green.bold(`Voters: ${voter1}\n${voter2}\n${voter3}\n${voter4}\n${voter5}`));
 
+        // Amount to transfer
+        const amount = web3.utils.toWei('5', 'ether');
+
         // Deploy Token and delegate votes to voters
         const token = await Token.deployed();
         await token.delegate(voter1, { from: voter1, gas: 500000 });
@@ -38,12 +41,15 @@ module.exports = async function (callback) {
 
         // Deploy Governance contract
         const governance = await Governance.deployed();
+
+        // Generate unique proposal ID (example: using timestamp)
+        const proposalId = Date.now();
+
         const encodedFunction = treasury.contract.methods.releaseFunds().encodeABI();
         const description = "Release Funds from Treasury";
 
         // Create Proposal
         const tx = await governance.propose([treasury.address], [0], [encodedFunction], description, { from: proposer, gas: 500000 });
-        const proposalId = tx.logs[0].args.proposalId;
         console.log(chalk.magenta.bold(`Created Proposal ID: ${proposalId.toString()}\n`));
 
         // Log Proposal state and details
@@ -71,52 +77,29 @@ module.exports = async function (callback) {
         console.log(chalk.yellow(`Votes Against: ${web3.utils.fromWei(againstVotes.toString(), 'ether')}`));
         console.log(chalk.yellow(`Votes Neutral: ${web3.utils.fromWei(abstainVotes.toString(), 'ether')}\n`));
 
-        // Wait for proposal to succeed
+        // Check if majority votes are against (index 3 in votes array)
+        if (votes.filter(vote => vote === 3).length > votes.length / 2) {
+            throw new Error("Proposal failed due to majority votes Against.");
+        }
+
+        await token.transfer(proposer, amount, { from: executor, gas: 500000 });
         await logProposalDetails(proposalId, "Succeeded");
 
-        // Queue Proposal in Timelock
-        const timelock = await Timelock.deployed(); // Ensure TimelockController contract is deployed correctly
+        // Queue Proposal
         const proposalHash = web3.utils.sha3(description);
-        const delay = await timelock.getMinDelay();
-        const eta = Math.floor(Date.now() / 1000) + delay.toNumber() + 1; // ETA after minimum delay
-        await timelock.queueTransaction(governance.address, 0, encodedFunction, eta, { from: executor }); // Ensure correct function and parameters
-
-        console.log(chalk.green.bold(`Proposal queued in Timelock with ETA: ${eta}`));
-
-        // Wait for proposal to be executable
+        await governance.queue([treasury.address], [0], [encodedFunction], proposalHash, { from: executor, gas: 500000 });
         await logProposalDetails(proposalId, "Queued");
 
-        // Advance time to after ETA to execute proposal
-        await advanceTimeAndBlock(delay.toNumber() + 1);
-
-        // Execute Proposal in Timelock
-        await timelock.executeTransaction(governance.address, 0, encodedFunction, eta, { from: executor }); // Ensure correct function and parameters
-
-        console.log(chalk.green.bold(`Proposal executed in Timelock\n`));
+        // Execute Proposal
+        await governance.execute([treasury.address], [0], [encodedFunction], proposalHash, { from: executor, gas: 500000 });
+        await logProposalDetails(proposalId, "Executed");
 
         // Final treasury state
         console.log(chalk.green.bold(`Final funds released? ${await treasury.isReleased()}`));
         console.log(chalk.green.bold(`Final treasury balance: ${web3.utils.fromWei(await web3.eth.getBalance(treasury.address), 'ether')} ETH\n`));
-
     } catch (error) {
         console.error(chalk.red.bold(`Error: ${error.message}`));
     }
 
     callback();
 };
-
-async function advanceTimeAndBlock(time) {
-    await web3.currentProvider.send({
-        jsonrpc: "2.0",
-        method: "evm_increaseTime",
-        params: [time],
-        id: new Date().getTime()
-    });
-
-    await web3.currentProvider.send({
-        jsonrpc: "2.0",
-        method: "evm_mine",
-        params: [],
-        id: new Date().getTime()
-    });
-}
