@@ -216,7 +216,11 @@ const chalk = require('chalk');
 :memo: **I create a `console.log` for each operation logs in the screen**
 
 
-![Screenshot 2024-06-21 2006411](https://github.com/0xmahmoudJo0/DAO/assets/56273659/a13a7a88-7ccb-4c2b-a099-a2f29de4f26c)
+![Screenshot 2024-06-21 230026d](https://github.com/0xmahmoudJo0/DAO/assets/56273659/0090c619-20e1-4273-8b58-5d44117634a8)
+
+![Screenshot 2024-06-21 23032](https://github.com/0xmahmoudJo0/DAO/assets/56273659/e1d4136c-f8d3-415d-a757-b6053ef37a0e)
+
+
 
 1. The ALL accounts' addresses
 2. The voters, executers and proposal addresses
