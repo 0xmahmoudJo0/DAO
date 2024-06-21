@@ -1,4 +1,4 @@
-# What's DAO?
+# :classical_building: What's DAO?
 A decentralized autonomous organization (DAO) is an emerging form of organizational structure with no central governing body and whose members share a common goal of acting in the best interest of the entity. Popularized by blockchain enthusiasts, DAOs make decisions using a bottom-up management approach.
 
 ----------
@@ -12,7 +12,7 @@ The code is a simulation of how the DAO works with :
 ----------
 
 # Smart Contract Overview
-> I used Openzeppelin library for the contract creations, and the main contract `Governance.sol`
+> I used Openzeppelin library for the contract creations, and the main contract :scroll: `Governance.sol`
   ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
@@ -37,7 +37,7 @@ contract Governance is
 ....
   ```
 
-### Timelock.sol :
+### :hourglass: Timelock.sol :
 The Timelock.sol contract enforces a delay on the execution of proposals. It uses OpenZeppelin's TimelockController to ensure that there is a minimum delay before executing any proposed transaction, allowing DAO members time to review and potentially veto proposals.
 
 ```solidity
@@ -56,7 +56,7 @@ contract TimeLock is TimelockController {
 
 ```
 
-### Treasury.sol :
+### :moneybag: Treasury.sol :
 The Treasury.sol contract manages the DAO's funds. It holds the funds and allows for disbursement to a specified payee once the funds are released. Only the owner of the contract can release the funds, ensuring controlled and secure fund management.
 
 
@@ -81,7 +81,7 @@ contract Treasury is Ownable {
 ```
 
 
-### Migration.sol :
+### :rocket: Migration.sol :
 
 The Migration.sol contract helps in managing the deployment and upgrades of smart contracts. It keeps track of the last completed migration, ensuring that the deployment process can be managed and verified.
 
@@ -108,7 +108,7 @@ contract Migrations {
 
 
 
-### token.sol :
+### :coin: token.sol :
 
 "The Token.sol contract implements an ERC20 token with voting capabilities using ERC20Votes from OpenZeppelin Contracts. It supports token transfers and allows holders to participate in governance decisions within decentralized applications (DApps).
 
@@ -148,14 +148,14 @@ contract Token is ERC20Votes {
 
 -----
 
-# Requirements for initial setup:
+# :hammer_and_wrench: Requirements for initial setup:
 - Install [NodeJS](https://nodejs.org/en/), should work with any node version below 16.5.0
 - Install [Truffle](https://www.trufflesuite.com/docs/truffle/overview), In your terminal, you can check to see if you have truffle by running `truffle version`. To install truffle run `npm i -g truffle`. Ideal to have truffle version 5.4 to avoid dependency issues.
 - Install [Ganache](https://www.trufflesuite.com/ganache).
 
 -----
 
-# How it works?
+# :arrows_counterclockwise: How does it work?
 Firstly, I used **Ganache** which gives me a 10 ETH wallet with the private keys, and simulated the whole operations of the blockchain network,and a logs monitoring!!
 
 > the 10 accounts
@@ -213,7 +213,7 @@ const chalk = require('chalk');
         await governance.castVote(proposalId, votes[4], { from: voter5, gas: 500000 });
 ```
 
-**I create a `console.log` for each operation logs in the screen**
+:memo: **I create a `console.log` for each operation logs in the screen**
 
 
 ![Screenshot 2024-06-21 2006411](https://github.com/0xmahmoudJo0/DAO/assets/56273659/a13a7a88-7ccb-4c2b-a099-a2f29de4f26c)
@@ -229,7 +229,7 @@ const chalk = require('chalk');
 
 I hope you understand what and how the script works !!
 
-# Installations:
+# package: Installations:
 1- git the repo:
 ```bash
 git clone https://github.com/0xmahmoudJo0/DAO.git
