@@ -215,9 +215,37 @@ const chalk = require('chalk');
 
 **I create a `console.log` for each operation logs in the screen**
 
-![Screenshot 2024-06-21 1719277](https://github.com/0xmahmoudJo0/DAO/assets/56273659/012f495a-639c-414e-a96b-ac280b057edc)
 
+![Screenshot 2024-06-21 2006411](https://github.com/0xmahmoudJo0/DAO/assets/56273659/a13a7a88-7ccb-4c2b-a099-a2f29de4f26c)
 
+1- The ALL accounts' addresses
+2- The voters, executers and proposal addresses
+3- The proposal ID
+4- The voting status --> *pre-configured to **yes*** as explained
+5- The blocks of the transactions added after the voting for it and release the funds
+> If we look to ganache to see the logs and the num of blocks 
 
+![Screenshot 2024-06-21 201339s](https://github.com/0xmahmoudJo0/DAO/assets/56273659/e1609249-24f2-4271-b8d6-e34c8a7bcbe2)
+
+I hope you understand what and how the script works !!
+
+# Installations:
+1- git the repo:
+```bash
+git clone https://github.com/0xmahmoudJo0/DAO.git
+```
+2- install the dependencies :
+```bash
+npm install
+```
+3- start Ganache
+4- migrate and reset the blockchain network
+```bash
+truffle migrate --reset --network development
+```
+5- run the proposal script:
+```bash
+truffle exec .\scripts\2_create_proposal.js
+```
 
 
